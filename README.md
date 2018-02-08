@@ -55,9 +55,9 @@ Este projeto serve para prática dos estudos em diversas linguagens de programa�
 
 ## Autor
 
-Lucas Marques
-**Email:** lucasmarques73@hotmail.com
-**LinkedIn:** [lucasmarques73](https://www.linkedin.com/in/lucasmarques73/)
+Lucas Marques  
+**Email:** lucasmarques73@hotmail.com  
+**LinkedIn:** [lucasmarques73](https://www.linkedin.com/in/lucasmarques73/)  
 
 ## Licença
 
