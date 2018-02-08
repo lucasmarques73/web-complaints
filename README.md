@@ -52,3 +52,11 @@ Este projeto serve para prática dos estudos em diversas linguagens de programa�
         - [Git](https://git-scm.com/)
         - [Jenkins](https://jenkins.io/)
         - [Travis CI](https://travis-ci.org/)
+
+## Autor
+
+Lucas Marques
+
+## Licença
+
+[MIT](https://github.com/lucasmarques73/web-complaints/blob/master/LICENSE)
