@@ -24,6 +24,7 @@ Este projeto serve para prática dos estudos em diversas linguagens de programa�
 
 1. Entendendo o funcionamento da aplicação para modelagem.
 2. Modelando o banco de dados.
+    - [Draw.io](https://www.draw.io/)
 3. Criando o banco de dados.
     - [PostgreSQL](https://www.postgresql.org/) - para modelo relacional.
     - [MongoDB](https://www.mongodb.com/) - para modelo não-relacional.
