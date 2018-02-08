@@ -2,11 +2,12 @@
 
 ## Ideia
 
-Denunciar qualquer irregularidade para os orgãos responsáveis.  
+Denunciar qualquer irregularidade para os orgãos responsáveis.
+
 > Denúncia : Buraco na rua de casa.  
 > Orgão : Prefeitura Municipal.  
 > Denúncia : Incêndio no terreno.  
-> Orgão : Bombeiros
+> Orgão : Bombeiros  
 
 ## Acompanhar a denúncia
 
@@ -17,6 +18,8 @@ Todas as denúncias vão ter status indicando qual a situação dela.
 > Denúncia Recebida => Orgão confirma o recebimento da denúncia.  
 > Tomando Atitudes => Orgão está trabalhando na solução do problema.  
 > Problema Resolvido => Orgão soluciona o problema.
+
+\* A Notificação será fictícia por ora.
 
 ## Motivação
 
