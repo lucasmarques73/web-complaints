@@ -92,5 +92,146 @@ E após isso, reiniciamos o serviço ssh:
 service sshd restart
 ```
 
+Agora não conseguimos mais conectar via ssh com o usuário root.
 
+### Servidor Web
 
+Optei pelo NGINX, mas antes de instalar ele precisamos instalar o pacote `build-essential`.  
+```
+sudo apt install build-essential
+```
+
+Foi instalado o NGINX para ser o servidor web. 
+
+```
+sudo apt install nginx
+```
+
+### Configuração de VHost
+
+Configurei dois vhosts para testes, usando um como um subdominio.  
+As configurações são básicamente as mesmas diferenciando dois paramêtros.
+
+Alterando para usuário `root`
+
+```
+sudo su
+```
+
+Criando o arquivo.
+
+```
+touch /etc/nginx/sites-available/home
+```
+
+Editando o arquivo.
+
+```
+nano /etc/nginx/sites-available/home
+```
+```
+server{
+	server_name www.lucasmarques73.com.br lucasmarques73.com.br;
+	root /var/www/html;
+	
+	index index.html;
+
+	charset utf-8;
+
+	location / {
+		try_files $uri $uri/ =404;
+	}
+
+}
+```
+
+* Lembrando que temos que ter dentro de `var/www/html` um arquivo com o nome de `idex.html` que será nossa pagina inicial.
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to lucasmarques73.com.br</h1>
+</body>
+</html>
+```
+
+Após criar ele eu o ativei.
+
+```
+ln -s /etc/nginx/sites-available/home /etc/nginx/sites-enabled/home
+```
+
+E removi o `default` criado pelo nginx.
+
+```
+rm /etc/nginx/sites-enabled/default
+```
+
+---
+Para o subdomínio o procedimento foi básicamente o mesmo.  
+Criando um novo projeto.
+```
+mkdir /var/www/teste
+touch /var/www/teste/index.html
+nano /vat/www/teste/index.html
+```
+Nova página.
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to teste.lucasmarques73.com.br</h1>
+</body>
+</html>
+```
+Novo vhost.
+
+```
+server{
+	server_name teste.lucasmarques73.com.br www.teste.lucasmarques73.com.br;
+	root /var/www/teste;
+	
+	index index.html;
+
+	charset utf-8;
+
+	location / {
+		try_files $uri $uri/ =404;
+	}
+
+}
+```
+
+Além disso, na locaweb adicionei zonas de dns.
+
+```
+Entrada : teste
+Tipo    : CNAME
+Conteúdo: lucasmarques73.com.br
+------------------------------------------------
+Entrada : teste
+Tipo    : A
+Conteúdo: #Ip do servidor
+```
