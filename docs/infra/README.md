@@ -60,7 +60,9 @@ Após acesso via root, primeira etapa foi criar um novo usuário e conceder priv
 
 ```
 adduser lucas
+
 usermod -aG sudo lucas
+
 usermod -aG root lucas
 ```
 
@@ -107,7 +109,7 @@ Foi instalado o NGINX para ser o servidor web.
 sudo apt install nginx
 ```
 
-### Configuração de VHost
+### Configuração de VHost e subdomínios
 
 Configurei dois vhosts para testes, usando um como um subdominio.  
 As configurações são básicamente as mesmas diferenciando dois paramêtros.
@@ -183,7 +185,9 @@ Para o subdomínio o procedimento foi básicamente o mesmo.
 Criando um novo projeto.
 ```
 mkdir /var/www/teste
+
 touch /var/www/teste/index.html
+
 nano /vat/www/teste/index.html
 ```
 Nova página.
@@ -235,3 +239,107 @@ Entrada : teste
 Tipo    : A
 Conteúdo: #Ip do servidor
 ```
+
+### Configurando SSL
+
+Decidi por curiosidade instalar certificados SSL no meu servidor usando o [letsencrypt](https://letsencrypt.org/) por ser gratuito.
+
+Segui o tutorial da [SegInfo](https://seginfo.com.br/2015/12/09/guia-passo-a-passo-para-instalar-o-certificado-ssl-gratuito-da-lets-encrypt-no-seu-site-2/)
+
+É necessário clonar o projeto do github então o primeiro passo foi instalar o git.
+
+```
+apt install git
+```
+
+Clonando o projeto
+
+```
+git clone https://github.com/letsencrypt/letsencrypt
+
+cd letsencrypt
+
+./letsencrypt-auto
+```
+Neste momento eu tive um problema e fui ao google.
+
+```
+setuptools pkg_resources pip wheel failed with error code 1
+```
+
+Solução encontrada através da [Issue](setuptools pkg_resources pip wheel failed with error code 1)
+
+```
+apt install letsencrypt
+
+export LC_ALL="en_US.UTF-8"
+
+export LC_CTYPE="en_US.UTF-8"
+
+```
+
+Após o procedimento anterior rodei novamente o `letsencrypt-auto`, ele foi o responsável de fazer toda a configuração nos hosts.
+
+Dentro da pasta `letsencrypt`
+```
+./letsencrypt-auto
+```
+
+Ele fez algumas perguntas pedindo email, confirmação dos termos.  
+Após isso ele mostrou meus hosts e foi só selecionar qual eu queria colocar o certificado e depois optei pela ferramenta sobrescrever meu arquivo de configuração do host. 
+Com isso já consegui acessar meu domínio pela conexão segura `https`.  
+
+Como resultado meu arquivo de configuração do host ficou da seguinte maneira. 
+
+ ```
+ server{
+	server_name www.lucasmarques73.com.br lucasmarques73.com.br;
+	root /var/www/html;
+	
+	index index.html;
+
+	charset utf-8;
+
+	location / {
+		try_files $uri $uri/ =404;
+	}
+ # managed by Certbot
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/www.lucasmarques73.com.br/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/www.lucasmarques73.com.br/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+
+}
+server{
+    if ($host = www.lucasmarques73.com.br) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    if ($host = lucasmarques73.com.br) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+	server_name www.lucasmarques73.com.br lucasmarques73.com.br;
+    listen 80;
+    return 404; # managed by Certbot
+
+}
+```
+
+## Fontes
+
+* https://github.com/certbot/certbot/issues/2883
+* https://seginfo.com.br/2017/06/29/diga-adeus-ao-ssl-e-versoes-antigas-do-tls/
+* https://showmethecode.com.br/2017/02/07/blog/
+* http://adrianorosa.com/blog/nginx/setup-server-block-virtual-host-com-nginx.html
+* https://gist.github.com/vedovelli/a50fdd9c9b745b61407a
+* https://blog.fibrasites.com.br/transformando-subdominios-em-rotas-com-o-nginx/
+* https://gist.github.com/ianjuma/9009490
+* https://wiki.locaweb.com.br/pt-br/Redirecionamento_via_zona_de_DNS
+* https://tchubirabiron.wordpress.com/2012/05/14/como-desabilitar-o-login-do-root-para-acesso-via-ssh/
+* https://www.digitalocean.com/community/tutorials/configuracao-inicial-de-servidor-com-ubuntu-16-04-pt
