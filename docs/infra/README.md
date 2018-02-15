@@ -381,6 +381,54 @@ chmod +x homepage.git/hooks/post-receive
 O hook `post-receive` vai executar o script dentro do arquivo depois que todo o processo esteja concluído.  
 Entrando dentro da pasta do projeto e dando um `pull` atualizando o projeto.
 
+Em nosso computador local, devemos clonar o projeto do nosso servidor remoto para trabalharmos nele.
+```
+git clone lucas@lucasmarques73.com.br:/home/lucas/homepage.git
+```
+
+Adicione ou caso já tenha um arquivo, edite ele para testarmos o hook.
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Welcome to lucasmarques73!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            width: 35em;
+            margin: 0 auto;
+            font-family: Tahoma, Verdana, Arial, sans-serif;
+        }
+    </style>    
+</head>
+<body>
+    <h1>Welcome to lucasmarques73.com.br</h1>
+    <p>Works Hooks</p>
+    <p>Works Hooks</p>
+</body>
+</html>
+```
+
+Após isso vamos subir essa alteração e automáticamente ela já deve ser refletida no seu site em produção.
+```
+git add .
+
+git commit -m "testing hooks"
+
+git push origin master
+```
+
+Além de subir direto para produção, utilizei o github.com para guardar o repositório.
+```
+git remote add github git@github.com:lucasmarques73/homepage.git
+
+git push github master
+```
+
+Com isso tenho meu projeto no meu servidor e também no meu github e toda vez que subir uma alteração, tenho que subir para os dois repos remotos.
+
 
 ## Fontes
 
