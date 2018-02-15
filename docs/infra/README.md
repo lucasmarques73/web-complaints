@@ -123,18 +123,18 @@ sudo su
 Criando o arquivo.
 
 ```
-touch /etc/nginx/sites-available/home
+touch /etc/nginx/sites-available/homepage.conf
 ```
 
 Editando o arquivo.
 
 ```
-nano /etc/nginx/sites-available/home
+nano /etc/nginx/sites-available/homepage.conf
 ```
 ```
 server{
 	server_name www.lucasmarques73.com.br lucasmarques73.com.br;
-	root /var/www/html;
+	root /home/lucas/homepage;
 	
 	index index.html;
 
@@ -147,7 +147,7 @@ server{
 }
 ```
 
-* Lembrando que temos que ter dentro de `var/www/html` um arquivo com o nome de `idex.html` que será nossa pagina inicial.
+* Lembrando que temos que ter dentro de `/home/lucas/homepage` um arquivo com o nome de `index.html` que será nossa pagina inicial.
 
 ```html
 <!DOCTYPE html>
@@ -171,7 +171,7 @@ server{
 Após criar ele eu o ativei.
 
 ```
-ln -s /etc/nginx/sites-available/home /etc/nginx/sites-enabled/home
+ln -s /etc/nginx/sites-available/homepage.conf /etc/nginx/sites-enabled/homepage.conf
 ```
 
 E removi o `default` criado pelo nginx.
@@ -267,7 +267,7 @@ Neste momento eu tive um problema e fui ao google.
 setuptools pkg_resources pip wheel failed with error code 1
 ```
 
-Solução encontrada através da [Issue](setuptools pkg_resources pip wheel failed with error code 1)
+Solução encontrada através da [Issue](https://github.com/certbot/certbot/issues/2883)
 
 ```
 apt install letsencrypt
@@ -294,7 +294,7 @@ Como resultado meu arquivo de configuração do host ficou da seguinte maneira.
  ```
  server{
 	server_name www.lucasmarques73.com.br lucasmarques73.com.br;
-	root /var/www/html;
+	root /home/lucas/homepage;
 	
 	index index.html;
 
@@ -331,6 +331,57 @@ server{
 }
 ```
 
+
+## Git Hooks
+
+Configurei um hook no git para sempre que fizer o push para meu servidor ele já faça o pull e atualize meu repositório.
+
+Criando repositório responsável pelo hook
+```
+mkdir homepage.git
+
+cd homepage.git
+
+git init --bare
+```
+
+repositório do projeto
+```
+cd /home/lucas
+
+git clone homepage.git
+```
+
+No final vamos ter duas pastas
+```
+homepage.git #Responsável pelo hook
+
+homepage    #Responsável pelos arquivos do projeto
+```
+
+Criando o hook
+```
+touch /home/lucas/homepage.git/hooks/post-receive
+```
+
+Editando o arquivo do hook
+```
+nano /home/lucas/homepage.git/hooks/post-receive
+```
+```
+unset $(git rev-parse --local-env-vars)
+cd /home/lucas/homepage
+git pull
+```
+
+Alterar a permissão do arquivo
+```
+chmod +x homepage.git/hooks/post-receive
+```
+O hook `post-receive` vai executar o script dentro do arquivo depois que todo o processo esteja concluído.  
+Entrando dentro da pasta do projeto e dando um `pull` atualizando o projeto.
+
+
 ## Fontes
 
 * https://github.com/certbot/certbot/issues/2883
@@ -343,3 +394,4 @@ server{
 * https://wiki.locaweb.com.br/pt-br/Redirecionamento_via_zona_de_DNS
 * https://tchubirabiron.wordpress.com/2012/05/14/como-desabilitar-o-login-do-root-para-acesso-via-ssh/
 * https://www.digitalocean.com/community/tutorials/configuracao-inicial-de-servidor-com-ubuntu-16-04-pt
+* https://git-scm.com/book/pt-br/v1/Customizando-o-Git-Hooks-do-Git
