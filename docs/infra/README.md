@@ -430,6 +430,52 @@ git push github master
 Com isso tenho meu projeto no meu servidor e também no meu github e toda vez que subir uma alteração, tenho que subir para os dois repos remotos.
 
 
+## Instalar NVM e NodeJS
+
+Como minha ideia é fazer alguns projetos usando NodeJS, resolvi instalar o nvm para ter um melhor gerenciamento sobre a versão do meu Node.
+
+Antes de começar com o NVM tenho que instalar alguns pacotes.
+```
+sudo apt update
+sudo apt install build-essential libssl-dev
+```
+
+Baixando NVM
+```
+curl -sL https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh -o install_nvm.sh
+```
+* Lembrando que estou baixando a versão v0.33.8 e pode sofrer alterações.
+
+Executando o script
+```
+bash install_nvm.sh
+```
+Ele irá instalar o software dentro de um subdiretório do seu diretório home em `~/.nvm.` Ele irá adicionar também as linhas necessárias ao seu arquivo `~/.profile` para utilizar o arquivo.  
+
+Para obter acesso à funcionalidade do nvm, você precisará sair e se logar novamente, ou você pode varrer o arquivo `~/.profile` de modo que sua sessão atual saiba sobre as alterações:
+
+```
+source ~/.profile
+```
+* Texto retirado do tutorial da DigitalOcean.
+
+Listando as versões disponíveis do Node:
+```
+nvm ls-remote
+```
+
+Instalando a versão:
+```
+nvm install v9.5.0
+```
+
+Testando o Noje e o Npm:
+```
+node --version #v9.5.0
+npm --version #5.6.0
+```
+
+
 ## Fontes
 
 * https://github.com/certbot/certbot/issues/2883
@@ -443,3 +489,4 @@ Com isso tenho meu projeto no meu servidor e também no meu github e toda vez qu
 * https://tchubirabiron.wordpress.com/2012/05/14/como-desabilitar-o-login-do-root-para-acesso-via-ssh/
 * https://www.digitalocean.com/community/tutorials/configuracao-inicial-de-servidor-com-ubuntu-16-04-pt
 * https://git-scm.com/book/pt-br/v1/Customizando-o-Git-Hooks-do-Git
+* https://www.digitalocean.com/community/tutorials/como-instalar-o-node-js-no-ubuntu-16-04-pt
