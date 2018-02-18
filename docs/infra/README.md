@@ -475,6 +475,61 @@ node --version #v9.5.0
 npm --version #5.6.0
 ```
 
+# Subir Projeto que está no Github para VPS
+
+Criar projeto na VPS
+
+```
+mkdir project.git
+
+cd project.git
+
+git init --bare
+```
+
+Clonar repositório na VPS
+
+```
+cd ~
+
+git clone project.git
+```
+
+Criar hook na VPS
+```
+touch project.git/hooks/post-receive
+
+nano project.git/hooks/post-receive
+```
+```
+unset $(git rev-parse --local-env-vars)
+cd /home/lucas/homepage
+git pull
+```
+
+Local, clonar repositório
+```
+git clone lucas@lucasmarques73.com.br:/home/lucas/project.git
+```
+
+Local, `add remote github`
+```
+cd project 
+
+git remote add github #link do projeto no github
+```
+
+Local, `pull` do projeto no github
+```
+git pull github master
+```
+
+Local, subir para VPS
+```
+git push origin master
+```
+
+
 
 ## Fontes
 
