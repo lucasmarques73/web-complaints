@@ -240,7 +240,7 @@ Tipo    : A
 Conteúdo: #Ip do servidor
 ```
 
-### Configurando SSL
+### Configurando SSL com LetsEncrypt
 
 Decidi por curiosidade instalar certificados SSL no meu servidor usando o [letsencrypt](https://letsencrypt.org/) por ser gratuito.
 
@@ -330,6 +330,74 @@ server{
 
 }
 ```
+
+## Configurando SSL com Certbot
+
+Ele e o Letsencrypt trabalham juntos, então segue uma outra forma de configurar SSL.
+
+Instalando o `certbot`.
+```
+sudo apt-get update
+sudo apt-get install software-properties-common
+sudo add-apt-repository ppa:certbot/certbot
+sudo apt-get update
+sudo apt-get install python-certbot-nginx 
+```
+Rodando o `Certbot` para gerar o certificado e já configurar o `Nginx`
+```
+sudo certbot --nginx
+```
+
+* **Um detalhe importante é que os certificados tem duração de 3 mêses e é necessário renovar eles.**
+
+Segundo o site do `(Certbot)[https://certbot.eff.org/#ubuntuxenial-nginx]` eles tem uma renovação automática. Eu rodei o comando mas ainda não sei se ele realmente funciona pelo tempo que tenho certificado.
+
+Renovando automaticamente.
+```
+sudo certbot renew --dry-run
+```
+
+Outra mandeira de renovar, também utilizei desta ferramenta, é o `crontab` onde agendei pra rodar um script de renovação todo mês. Usei o exemplo do site `(showmethecode)[https://showmethecode.com.br/2017/04/14/letsencrypt-nginx/]` onde é colocado pra rodar no primeiro dia de todo mês às 00h00m o comando que renova os certificados.
+
+```
+0 0 1 * * /usr/bin/certbot renew >> /var/log/le-renew.log
+```
+
+E após renovar temos que reiniciar o servidor `nginx`, ele é reiniciado todo primeiro dia de todo mês as 00h05m.
+
+```
+5 0 1 * * /bin/systemctl reload nginx
+```
+
+### Atualizando o certificado existente para adicionar subdomínios
+
+Utilizando ainda o Certbot, eu atualizo meu certificado para que ele aceite meus subdomínios, como todos estão rodando no mesmo servidor isso é possível.  
+Um detalhe importante é que todos os DNS devem estar previamente configurados.  
+No meu caso, tive que adicionar duas Zonas de DNS na locaweb, são elas.
+
+```
+Entrada : resume
+Tipo    : A
+Conteúdo: #Ip do servidor
+------------------------------------------------
+Entrada : www.resume
+Tipo    : A
+Conteúdo: #Ip do servidor
+```
+
+Meu subdomínio é resume.lucasmarques73.com.br, após os subdomínios configurados, é hora de atualizar o certificado para ele também.
+
+```
+certbot --expand -d existing.com,example.com,newdomain.com # Comando de exemplo, retirado da documentação do certbot.
+```
+
+Reinicio o servidor para subir a atualização
+
+```
+sudo service nginx restart
+```
+
+Após isso meu domínio e meu subdomínio já estão rodando em SSL com certificado.
 
 
 ## Git Hooks
@@ -501,6 +569,11 @@ touch project.git/hooks/post-receive
 
 nano project.git/hooks/post-receive
 ```
+Dar permissão para o hook
+```
+chmod +x /home/lucas/project.git/hook/post-receive
+```
+
 ```
 unset $(git rev-parse --local-env-vars)
 cd /home/lucas/homepage
