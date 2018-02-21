@@ -606,6 +606,8 @@ git push origin master
 
 ## Fontes
 
+* https://certbot.eff.org/docs/using.html#renewing-certificates
+* https://certbot.eff.org/#ubuntuxenial-nginx
 * https://github.com/certbot/certbot/issues/2883
 * https://seginfo.com.br/2017/06/29/diga-adeus-ao-ssl-e-versoes-antigas-do-tls/
 * https://showmethecode.com.br/2017/02/07/blog/
